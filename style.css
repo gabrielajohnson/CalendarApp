@@ -17,6 +17,16 @@ input{
   font-size:16px;
 }
 
+#cleartasks{
+  height: calc(100%/6);
+  line-height: 0;
+  margin-top: 1px;
+}
+
+#clear_storage{
+  float:left;
+}
+
 .addButton{
   background:maroon;
   width: 16px;
@@ -95,6 +105,7 @@ select{
 .calendar_container{
   height:70%;
   text-align:center;
+  margin-top: 10px;
 }
 
 #calendar{
@@ -146,6 +157,11 @@ select{
 #calendar li div:not(.button){
   width: 70%;
 }
+
+tr td:nth-child(7) ul li.mobileList{
+  margin-left: -40px !important;
+}
+
 
 th{
   height:20px;
