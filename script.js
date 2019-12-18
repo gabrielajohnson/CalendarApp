@@ -1,19 +1,19 @@
 window.onload = function(){
 
 var notesArray = {};
-var arrayman;
+var tempNotesArray;
 var notes = document.getElementById("notes");
 var count = 1;
 var clearbutton = document.getElementById("cleartasks");
 clearbutton.addEventListener("click",cleartasks,false);
 
 if(window.localStorage.getItem("persons")){
-  var arrayman = JSON.parse(window.localStorage.getItem("persons"));
-    for(var key in arrayman){
+  var tempNotesArray = JSON.parse(window.localStorage.getItem("persons"));
+    for(var key in tempNotesArray){
       var inputblock =  document.createElement("input");
       inputblock.addEventListener("keyup",changeValue,false);
       inputblock.setAttribute("id", "n" + count);
-      inputblock.value = arrayman[key];
+      inputblock.value = tempNotesArray[key];
       count++;
       notes.append(inputblock);
   } 
@@ -98,6 +98,7 @@ var eventItem = document.getElementById("eventItem");
 var editEventItem = document.getElementById("editEventItem");
 var clearStorage = document.getElementById("clear_storage");
 var d;
+var newDate = new Date();
 var eventDates = [];
 var dayIndexforSave;
 var eventsMonthYear;
@@ -313,7 +314,7 @@ function addEventToBlock(){
           deleteButton.classList.add("button");
           var editButton = document.createElement("div");   
           editButton.addEventListener("click",openEditEvent,false);
-          editButton.innerHTML = "<img src = 'pen.png'/>";
+          editButton.innerHTML = "<img src = 'images/pen.png'/>";
           editButton.classList.add("button");
           var textArrayLength = eventsMonthYear[dayIndexforSave].length-1;
           //listItem.textContent = eventsMonthYear[dayIndexforSave][textArrayLength];
@@ -367,7 +368,7 @@ function addEventsToCalendar(){
                     deleteButton.classList.add("button");
                     var editButton = document.createElement("div");   
                     editButton.addEventListener("click",openEditEvent,false);
-                    editButton.innerHTML = "<img src = 'pen.png'/>";
+                    editButton.innerHTML = "<img src = 'images/pen.png'/>";
                     editButton.classList.add("button");
                     deleteButton.textContent = "X";
                     var textDiv = document.createElement("div");
@@ -511,6 +512,9 @@ saveChanges.addEventListener("click",editEvent,false);
 
 populateSelect(months,monthSelect);
 populateSelect(years,yearSelect);
+
+monthSelect.value = months[newDate.getMonth()];
+yearSelect.value = newDate.getFullYear();
 generateTime(months.indexOf(monthSelect.value),yearSelect.value);
 
 
