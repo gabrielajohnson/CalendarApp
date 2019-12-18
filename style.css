@@ -13,6 +13,10 @@ button{
     cursor:pointer;
 }
 
+input{
+  font-size:16px;
+}
+
 .addButton{
   background:maroon;
   width: 16px;
@@ -74,6 +78,7 @@ button{
 
 #weather .description{
   margin:auto;
+  width:100%;
 }
 
 #weather img{
@@ -185,6 +190,7 @@ td:hover{
   color: #f1e3bf;
   box-shadow: 0px 0px 10px #3e1111;
   border: 0;
+  z-index: 200;
 }
 
 #eventModal, #editEventModal input{
@@ -206,7 +212,7 @@ td:hover{
 }
 
 #calendar ul li.mobileList{
-    display:block;
+    display:flex;
     background:maroon;
     position:absolute;
     width:80px;
