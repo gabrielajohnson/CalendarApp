@@ -113,7 +113,7 @@ var years = [2019,2020,2021,2022,2023];
 
 function detectMobile(){
     lists = document.getElementById("calendar").getElementsByTagName("ul");
-    if(screen.width < 400 || document.body.clientWidth < 400){
+    if(screen.width < 450 || document.body.clientWidth < 450){
         
       for(var i = 0; i < lists.length; i++){
            if(lists[i].firstChild){
@@ -171,7 +171,12 @@ function addDayBlock(newrow,i){
       let block = document.createElement("td");
       let blockNum = document.createTextNode(i);
       let eventBlock = document.createElement("ul");
-      block.append(blockNum);
+      let addButton = document.createElement("button");
+      addButton.addEventListener("click",addEvent,false);
+      addButton.classList.add("addButton");
+      addButton.textContent = "+";
+      block.append(blockNum);      
+      block.append(addButton);
       block.append(eventBlock);
       block.addEventListener("click",addEvent,false);
       newrow.append(block);
@@ -209,7 +214,11 @@ function selectTime(){
 function addEvent(){
   //bubbling and capturing
   if(event.target == this){
-     dayIndexforSave = this.firstChild.data;
+      if(this.className == "addButton"){
+        dayIndexforSave = this.parentNode.firstChild.data;
+      }else{
+        dayIndexforSave = this.firstChild.data;
+      }
      eventModal.classList.remove("hide");
      monthSelect.setAttribute("disabled", "true");
      yearSelect.setAttribute("disabled", "true");
@@ -278,7 +287,6 @@ if(eventItem.value){
     monthSelect.removeAttribute("disabled");
     yearSelect.removeAttribute("disabled");
 
- console.dir(eventDates);
 }
 
 function addEventToBlock(){
@@ -293,22 +301,26 @@ function addEventToBlock(){
   
       if(calendar.children[j].childNodes[k].firstChild){
             var calendarIndex = calendar.children[j].childNodes[k].firstChild.data;
-        
+            
         if(calendarIndex == dayIndexforSave){
 
-          let eventBlock = calendar.children[j].childNodes[k].childNodes[1];
+          let eventBlock = calendar.children[j].childNodes[k].childNodes[2];
           var listItem = document.createElement("li");
           let attributeIndex = String(dayIndexforSave);
           var deleteButton = document.createElement("div");
           deleteButton.addEventListener("click",deleteEvent,false);
           deleteButton.textContent = "X";
+          deleteButton.classList.add("button");
           var editButton = document.createElement("div");   
           editButton.addEventListener("click",openEditEvent,false);
           editButton.innerHTML = "<img src = 'pen.png'/>";
-
+          editButton.classList.add("button");
           var textArrayLength = eventsMonthYear[dayIndexforSave].length-1;
-          listItem.textContent = eventsMonthYear[dayIndexforSave][textArrayLength];
-
+          //listItem.textContent = eventsMonthYear[dayIndexforSave][textArrayLength];
+          var textDiv = document.createElement("div");
+          //textDiv.textContent =  eventsMonthYear[index][l];
+          textDiv.textContent =  eventsMonthYear[dayIndexforSave][textArrayLength];
+          listItem.append(textDiv);
           listItem.append(deleteButton);
           listItem.append(editButton);
           eventBlock.addEventListener("click",openEventList,false);
@@ -340,7 +352,7 @@ function addEventsToCalendar(){
           for(let k = 0; k < calendar.children[j].childNodes.length; k++){
             if(calendar.children[j].childNodes[k].firstChild){
                var index = calendar.children[j].childNodes[k].firstChild.data;
-               var eventBlock = calendar.children[j].childNodes[k].childNodes[1];  
+               var eventBlock = calendar.children[j].childNodes[k].childNodes[2];  
               if( eventsMonthYear[index]){
                   for(var l = 0; l <  eventsMonthYear[index].length; l++){
        
@@ -350,11 +362,15 @@ function addEventsToCalendar(){
                     var deleteButton = document.createElement("div");
                     deleteButton.addEventListener("click",deleteEvent,false);
                     deleteButton.textContent = "X";
+                    deleteButton.classList.add("button");
                     var editButton = document.createElement("div");   
                     editButton.addEventListener("click",openEditEvent,false);
                     editButton.innerHTML = "<img src = 'pen.png'/>";
+                    editButton.classList.add("button");
                     deleteButton.textContent = "X";
-                    listItem.textContent =  eventsMonthYear[index][l];
+                    var textDiv = document.createElement("div");
+                    textDiv.textContent =  eventsMonthYear[index][l];
+                    listItem.append(textDiv);
                     listItem.append(deleteButton);
                     listItem.append(editButton);
                     eventBlock.addEventListener("click",openEventList,false);
@@ -436,7 +452,9 @@ function editEvent(){
     } 
   }
 
-  editItemListItem.parentNode.firstChild.data = editEventItem.value;
+  console.dir(editItemListItem.parentNode.firstChild);
+  console.dir(editEventItem.value);
+  editItemListItem.parentNode.firstChild.innerText = editEventItem.value;
 
   var savedEvent = JSON.stringify(eventDates);
   window.localStorage.setItem("retrieveEvent", savedEvent);
@@ -448,22 +466,30 @@ function editEvent(){
 
 
 function openEventList(){
+  var marginCounter = 0;
+  lists = this.children;
+  setTimeout(function() {
+   var myObj = this; //some code for creation of complex object like above
+   console.log(this); // this works
+   console.log(this.children); // this works too
+});
   if(event.target == this){
 
     if(previousListThis){
       for(var k = 0; k < previousListThis.children.length; k++){
-        console.log();
         previousListThis.children[k].classList.remove("mobileList");
+        previousListThis.children[k].style.marginTop = "";
       }
     }
 
+    if(screen.width < 450 || document.body.clientWidth < 450){
+      //console.log(lists[0]);
 
-    lists = this.children;
-    if(screen.width < 400 || document.body.clientWidth < 400){
-        
       for(var i = 0; i < lists.length; i++){
            if(lists[i].firstChild){
                 lists[i].classList.add("mobileList");
+                lists[i].style.marginTop = marginCounter + "px";
+                marginCounter += 18;
            }
       }
     }
