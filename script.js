@@ -332,6 +332,8 @@ function addEventToBlock(){
     }
                   
   }
+
+
   eventModal.classList.add("hide");
   monthSelect.removeAttribute("disabled");
   yearSelect.removeAttribute("disabled");  
@@ -419,8 +421,11 @@ function deleteEvent(){
     } 
   }
 
+    var parentList = this.parentNode.parentNode;
+    if(parentList.children.length == 1 && parentList.className){
+        parentList.classList.remove("mobileList");
+    }
     this.parentNode.remove();
-
     var savedEvent = JSON.stringify(eventDates);
     window.localStorage.setItem("retrieveEvent", savedEvent);
   
@@ -468,11 +473,7 @@ function editEvent(){
 function openEventList(){
   var marginCounter = 0;
   lists = this.children;
-  setTimeout(function() {
-   var myObj = this; //some code for creation of complex object like above
-   console.log(this); // this works
-   console.log(this.children); // this works too
-});
+
   if(event.target == this){
 
     if(previousListThis){
@@ -483,7 +484,6 @@ function openEventList(){
     }
 
     if(screen.width < 450 || document.body.clientWidth < 450){
-      //console.log(lists[0]);
 
       for(var i = 0; i < lists.length; i++){
            if(lists[i].firstChild){
