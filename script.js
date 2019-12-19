@@ -232,6 +232,8 @@ function close(){
   this.parentNode.classList.add("hide");
   monthSelect.removeAttribute("disabled");
   yearSelect.removeAttribute("disabled");
+  eventItem.value = "";
+  editEventItem.value = "";
 }
 
 function saveEvent(){
