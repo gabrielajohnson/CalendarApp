@@ -13,9 +13,9 @@ button{
     cursor:pointer;
 }
 
-/*input{
+input{
   font-size:16px;
-}*/
+}
 
 #cleartasks{
   height: calc(100%/6 - 4px);
