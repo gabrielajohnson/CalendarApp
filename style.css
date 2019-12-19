@@ -13,9 +13,6 @@ button{
     cursor:pointer;
 }
 
-input{
-  font-size:16px;
-}
 
 #cleartasks{
   height: calc(100%/6 - 4px);
@@ -220,6 +217,7 @@ td:hover{
   box-shadow: inset 0px 0px 4px 2px tan;
   border: 0;
   margin-top: 20px;
+  font-size:16px;
 }
 
 #eventModal button, #editEventModal button{
