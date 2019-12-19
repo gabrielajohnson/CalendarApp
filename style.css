@@ -139,6 +139,7 @@ select{
   color:black;
   display:flex;
   background: #f5ecbc;
+  text-indent: 2px;
 }
 
 #calendar ul div img{

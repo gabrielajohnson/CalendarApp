@@ -128,6 +128,7 @@ function detectMobile(){
            }
             for(var k = 0; k < lists[i].children.length; k++){
                 lists[i].children[k].classList.remove("mobileList");
+                lists[i].children[k].style.marginTop = "";
             }
         }
 
@@ -276,7 +277,6 @@ if(eventItem.value){
       
     }
   }
-  
     var savedEvent = JSON.stringify(eventDates);
     window.localStorage.setItem("retrieveEvent", savedEvent);
     addEventToBlock();
@@ -333,8 +333,10 @@ function addEventToBlock(){
     }
                   
   }
-
-
+  if(listItem.parentNode.children.length > 1){
+    var listCaller = listItem.parentNode;
+    openEventList.call(listCaller);
+  }
   eventModal.classList.add("hide");
   monthSelect.removeAttribute("disabled");
   yearSelect.removeAttribute("disabled");  
@@ -407,8 +409,7 @@ function deleteEvent(){
         
            if(this.parentNode.parentNode.childNodes[j] == this.parentNode){
              if(eventMonthYear[index].length >= 2){
-
-                eventMonthYear[index].splice(j, eventMonthYear[index].length-1);
+                eventMonthYear[index].splice(eventMonthYear[index].length-1, 1);
                break;
              }else{
                 delete eventMonthYear[index];
@@ -458,8 +459,6 @@ function editEvent(){
     } 
   }
 
-  console.dir(editItemListItem.parentNode.firstChild);
-  console.dir(editEventItem.value);
   editItemListItem.parentNode.firstChild.innerText = editEventItem.value;
 
   var savedEvent = JSON.stringify(eventDates);
@@ -474,8 +473,6 @@ function editEvent(){
 function openEventList(){
   var marginCounter = 0;
   lists = this.children;
-
-  if(event.target == this){
 
     if(previousListThis){
       for(var k = 0; k < previousListThis.children.length; k++){
@@ -495,7 +492,7 @@ function openEventList(){
       }
     }
       previousListThis = this;
-  }
+  
 
 
 }
