@@ -120,7 +120,7 @@ select{
   margin: 0;
   width: 97%;
   overflow-y: auto;
-  height: calc(100% - 35px);
+  height: calc(100% - 18px);
   line-height: 1;
   margin-top: 2px;
 }
