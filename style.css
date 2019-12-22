@@ -192,7 +192,7 @@ th,td{
 }
 
 td{
-  height:50px;
+  height:0px;
   background: url(images/td_design.png),radial-gradient(beige,tan);
   box-shadow: inset 0px 0px 10px #9f702e;
   background-position: left bottom, center;
