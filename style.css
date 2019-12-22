@@ -123,6 +123,15 @@ select{
   height: calc(100% - 18px);
   line-height: 1;
   margin-top: 2px;
+  scrollbar-color: maroon transparent;
+}
+
+#calendar ul::-webkit-scrollbar-thumb {
+    background: maroon;
+}
+
+#calendar ul::-webkit-scrollbar {
+    background: transparent;
 }
 
 #calendar ul li .button{
