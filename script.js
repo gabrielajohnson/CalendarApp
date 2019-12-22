@@ -1,5 +1,26 @@
+//In my app you can add notes, view the current weather and add events to a calendar
+//The weather is taken from an API
+//In the calendar you can add, edit and delete events for each day
+//The notepad and calendar events are saved to localStorage
+//On mobile the calendar list of events is turned into  a clickable red dot to save space
+//If you click on it the list of events comes up
+
+//Used these for sure:
+//DOM element creation, deletion or modification
+//DOM traversal
+//Creating and handling a data structure (JSON, custom objects, etc)
+//Capturing and handling events (beyond just a “Do it!” button
+//AJAX
+//Only one feature with this:
+//Form validation(Checks to make sure the input field is filled before saving event)
+
+
+
+
 window.onload = function(){
 
+
+/*Notepad*/
 var notesArray = {};
 var tempNotesArray;
 var notes = document.getElementById("notes");
@@ -7,6 +28,7 @@ var count = 1;
 var clearbutton = document.getElementById("cleartasks");
 clearbutton.addEventListener("click",cleartasks,false);
 
+//check if notes already exist
 if(window.localStorage.getItem("persons")){
   var tempNotesArray = JSON.parse(window.localStorage.getItem("persons"));
     for(var key in tempNotesArray){
@@ -18,6 +40,7 @@ if(window.localStorage.getItem("persons")){
       notes.append(inputblock);
   } 
 }else{
+  //Set up new notes
   var notesArray = {"n1":"","n2":"","n3":"","n4":"","n5":""};
      for(var key in notesArray){
       var inputblock =  document.createElement("input");
@@ -25,6 +48,7 @@ if(window.localStorage.getItem("persons")){
       inputblock.setAttribute("id", key);
       notes.append(inputblock);
   } 
+  //save to local storage
   localStorage.setItem('persons', JSON.stringify(notesArray));
 }
 
@@ -33,7 +57,7 @@ if(window.localStorage.getItem("persons")){
 
 var persons = JSON.parse(localStorage.persons);
 
-
+//Everytime you type into a note, this function is called to save the value
 function changeValue(){
   persons[this.id] = this.value; 
       
@@ -41,7 +65,7 @@ function changeValue(){
 
 }
 
-
+//clear all note tasks
 function cleartasks(){
   localStorage.clear();
   var notesInput = notes.getElementsByTagName("input");
@@ -51,28 +75,32 @@ function cleartasks(){
   }
 }
 
+/*Weather*/
+
 var weather = document.getElementById("weather");
 var el = document.getElementById("weather").getElementsByClassName("description")[0];
 
-/*Weather*/
 
 var xhr = new XMLHttpRequest();
 
+//weather api
 xhr.open("GET", "https://api.openweathermap.org/data/2.5/weather?lat=40.177780&lon=-74.584290&appid=f73299cc3d3bcb102e545dc126c5fa2c"); 
 
 xhr.send();
 
 
-//  Add a listener function to respond to the HTTP response
 xhr.addEventListener("readystatechange", function(){
+  //make this call to the api
     if(this.readyState == 4 && this.status == 200){
         var message = JSON.parse(this.response);
+        //convert temp to fahrenheit 
         var temp = Math.round(1.8*(message.main.temp - 273) + 32) + "F&#176;";
         var icon = document.createElement("img");
         icon.setAttribute("src",'http://openweathermap.org/img/wn/' + message.weather[0].icon + '.png');
-      var newmessage = message.weather[0].description + '<br>' + "Temperature: " + temp;
-      el.innerHTML = newmessage;
-      weather.appendChild(icon);
+        //get description, temperature and weather icon. Add this to the weather siv
+        var newmessage = message.weather[0].description + '<br>' + "Temperature: " + temp;
+        el.innerHTML = newmessage;
+        weather.appendChild(icon);
     }
 });
 
@@ -85,7 +113,6 @@ xhr.addEventListener("readystatechange", function(){
 //Calendar javascript
 
 var calendar = document.getElementById("calendar_days");
-//dropdowns
 var monthSelect = document.getElementById("monthselect");
 var yearSelect = document.getElementById("yearselect");
 var eventModal = document.getElementById("eventModal");
@@ -113,6 +140,8 @@ var days = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturda
 var years = [2019,2020,2021,2022,2023];
 
 function detectMobile(){
+    //Check if the app is on a mobile screen and turn all event lists into red dots
+    //that can be tapped to view full list
     lists = document.getElementById("calendar").getElementsByTagName("ul");
     if(screen.width < 450 || document.body.clientWidth < 450){
         
@@ -141,6 +170,7 @@ function monthLength (month, year) {
 }
 
 function generateTime(month,year){
+  //generate calendar based on month and year
   var daysInMonth = monthLength(month+1,year);
 
   var row = document.createElement("tr");
@@ -170,6 +200,7 @@ for(var i = 1; i <= daysInMonth; i++){
 }
 
 function addDayBlock(newrow,i){
+  //create all properties and divs for calendar day
       let block = document.createElement("td");
       let blockNum = document.createTextNode(i);
       let eventBlock = document.createElement("ul");
@@ -186,6 +217,7 @@ function addDayBlock(newrow,i){
 
 
 function populateSelect(poparray,select){
+  //populates select with array, specifically month and year
   let newarray = poparray;
   let newselect = select;
   
@@ -199,12 +231,14 @@ function populateSelect(poparray,select){
 }
 
 function clearMonth(){
+  //clear month before repopulating with new month
   while(calendar.children.length > 0){ 
     calendar.children[0].remove();
   }
 }
 
 function selectTime(){
+  //preliminary actions taken before generating new month and year
   clearMonth();
   let newMonth = months.indexOf(monthSelect.value);
   let newYear = yearSelect.value;
@@ -214,7 +248,7 @@ function selectTime(){
 
 
 function addEvent(){
-  //bubbling and capturing
+  //open save event block
   if(event.target == this){
       if(this.className == "addButton"){
         dayIndexforSave = this.parentNode.firstChild.data;
@@ -229,6 +263,7 @@ function addEvent(){
 }
 
 function close(){
+  //close edit and save blocks
   this.parentNode.classList.add("hide");
   monthSelect.removeAttribute("disabled");
   yearSelect.removeAttribute("disabled");
@@ -237,13 +272,14 @@ function close(){
 }
 
 function saveEvent(){
-  if(window.localStorage.getItem("retrieveEvent")){
+ if(window.localStorage.getItem("retrieveEvent")){
   eventDates = JSON.parse(window.localStorage.getItem("retrieveEvent"));  
-}
+ }
 
 if(eventItem.value){
   
   if(eventDates.length == 0){
+    //add event to empty object
     eventDates[0] = {};
     eventDates[0].month = monthSelect.value;
     eventDates[0].year = yearSelect.value; 
@@ -258,17 +294,19 @@ if(eventItem.value){
     
     for(var i = 0; i < eventDates.length; i++){
       if(eventDates[i].month == monthSelect.value && eventDates[i].year == yearSelect.value){
+         //push event to existing array
          if(eventDates[i][dayIndexforSave]){
         
             eventDates[i][dayIndexforSave].push(eventItem.value);
             break;
          }else{
-
+          //create new array in a day
            eventDates[i][dayIndexforSave] = [eventItem.value];
            break;
           }
      
       }else if(i == eventDates.length-1){
+        //create new month and year object
           eventDates[eventDates.length] = {};
           eventDates[eventDates.length-1].month = monthSelect.value;
           eventDates[eventDates.length-1].year = yearSelect.value; 
@@ -279,6 +317,8 @@ if(eventItem.value){
       
     }
   }
+
+    //save to localstorage
     var savedEvent = JSON.stringify(eventDates);
     window.localStorage.setItem("retrieveEvent", savedEvent);
     addEventToBlock();
@@ -293,20 +333,21 @@ if(eventItem.value){
 }
 
 function addEventToBlock(){
+  //find object with selected month and year
    for(var i = 0; i < eventDates.length; i++){
       if(eventDates[i].month == monthSelect.value && eventDates[i].year == yearSelect.value){
           var eventsMonthYear = eventDates[i];
       }
    }
-            
+  //Iterate through days until the clicked on day is reached           
   for(let j = 0; j < calendar.children.length; j++){              
     for(let k = 0; k < calendar.children[j].childNodes.length; k++){
   
       if(calendar.children[j].childNodes[k].firstChild){
             var calendarIndex = calendar.children[j].childNodes[k].firstChild.data;
-            
+        //Found the day
         if(calendarIndex == dayIndexforSave){
-
+          //Add the event to the block
           let eventBlock = calendar.children[j].childNodes[k].childNodes[2];
           var listItem = document.createElement("li");
           let attributeIndex = String(dayIndexforSave);
@@ -319,9 +360,7 @@ function addEventToBlock(){
           editButton.innerHTML = "<img src = 'images/pen.png'/>";
           editButton.classList.add("button");
           var textArrayLength = eventsMonthYear[dayIndexforSave].length-1;
-          //listItem.textContent = eventsMonthYear[dayIndexforSave][textArrayLength];
           var textDiv = document.createElement("div");
-          //textDiv.textContent =  eventsMonthYear[index][l];
           textDiv.textContent =  eventsMonthYear[dayIndexforSave][textArrayLength];
           listItem.append(textDiv);
           listItem.append(deleteButton);
@@ -335,6 +374,7 @@ function addEventToBlock(){
     }
                   
   }
+  //Check to add the list item in mobile view
   if(listItem.parentNode.children.length > 1){
     var listCaller = listItem.parentNode;
     openEventList.call(listCaller);
@@ -347,22 +387,26 @@ function addEventToBlock(){
 
 
 function addEventsToCalendar(){
+  //pull events from local storage if they exist
   if(window.localStorage.getItem("retrieveEvent")){
        eventDates = JSON.parse(window.localStorage.getItem("retrieveEvent"));
   }
   
   
   for(var i = 0; i < eventDates.length; i++){
+      //find object with selected month and year
     if(eventDates[i].month == monthSelect.value && eventDates[i].year == yearSelect.value){
           eventsMonthYear = eventDates[i];
+        //Iterate through days until the clicked on day is reached 
         for(let j = 0; j < calendar.children.length; j++){              
           for(let k = 0; k < calendar.children[j].childNodes.length; k++){
             if(calendar.children[j].childNodes[k].firstChild){
                var index = calendar.children[j].childNodes[k].firstChild.data;
                var eventBlock = calendar.children[j].childNodes[k].childNodes[2];  
               if( eventsMonthYear[index]){
+                //Add events to all days in chosen month
                   for(var l = 0; l <  eventsMonthYear[index].length; l++){
-       
+                    
 
                     var listItem = document.createElement("li");
                     let attributeIndex = String(dayIndexforSave);
@@ -410,10 +454,12 @@ function deleteEvent(){
        for(var j = 0; j < listLength; j++){
         
            if(this.parentNode.parentNode.childNodes[j] == this.parentNode){
+            //check if it's in array and delete
              if(eventMonthYear[index].length >= 2){
                 eventMonthYear[index].splice(eventMonthYear[index].length-1, 1);
                break;
              }else{
+              //If there's only one list item left to delete, delete the whole day from the object
                 delete eventMonthYear[index];
                break;
              }
@@ -451,6 +497,7 @@ function editEvent(){
       var eventMonthYear = eventDates[i];
       var listLength = editItemListItem.parentNode.childNodes.length;
        for(var j = 0; j < listLength; j++){
+        //replace the listitem text with the new value from input
            if(editItemListItem.parentNode.parentNode.childNodes[j] == editItemListItem.parentNode){
                eventMonthYear[index][j] = editEventItem.value;
                break;             
@@ -475,7 +522,8 @@ function editEvent(){
 function openEventList(){
   var marginCounter = 0;
   lists = this.children;
-
+    //If you clicked on a red event dot on mobile, and then clicked on a second one,
+    //this if statement will hide the first red dot's list
     if(previousListThis){
       for(var k = 0; k < previousListThis.children.length; k++){
         previousListThis.children[k].classList.remove("mobileList");
@@ -484,7 +532,7 @@ function openEventList(){
     }
 
     if(screen.width < 450 || document.body.clientWidth < 450){
-
+      //Put the list items of the chosen red dot into view
       for(var i = 0; i < lists.length; i++){
            if(lists[i].firstChild){
                 lists[i].classList.add("mobileList");
@@ -512,6 +560,7 @@ saveChanges.addEventListener("click",editEvent,false);
 populateSelect(months,monthSelect);
 populateSelect(years,yearSelect);
 
+//Generate calender for current month and year
 monthSelect.value = months[newDate.getMonth()];
 yearSelect.value = newDate.getFullYear();
 generateTime(months.indexOf(monthSelect.value),yearSelect.value);
